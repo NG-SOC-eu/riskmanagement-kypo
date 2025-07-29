@@ -47,15 +47,6 @@
         regexp: '^bind-address'
         line: 'bind-address = 0.0.0.0'
 
-- name: Remove UFW from all hosts
-  hosts: all
-  become: true
-  tasks:
-    - name: Remove UFW firewall
-      ansible.builtin.apt:
-        name: ufw
-        state: absent
-
 - name: Configure substation RTU
   hosts: substation-rtu
   become: true
