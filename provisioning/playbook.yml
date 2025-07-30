@@ -54,7 +54,7 @@
     - name: Install netcat for ICS port simulation
       ansible.builtin.apt:
         update_cache: true
-        name: netcat
+        name: netcat-openbsd
         state: present
     - name: Open Modbus port (502)
       ansible.builtin.shell: nohup nc -lkp 502 >/dev/null 2>&1 &
