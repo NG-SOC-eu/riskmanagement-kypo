@@ -31,17 +31,6 @@
         dest: /var/www/html/index.html
         content: "<h1>Welcome to Online Banking</h1><p>Secure login portal.</p>"
         mode: '0644'
-    - name: Create User
-      ansible.builtin.user:
-        name: debian
-        password: qwerty!23
-        state: present
-    - name: Give sudo privileges
-      ansible.builtin.copy:
-        dest: /etc/sudoers.d/debian
-        content: "debian ALL=(ALL) NOPASSWD:ALL"
-        mode: '0440'
-        validate: 'visudo -cf %s'
 
 - name: Configure bank database
   hosts: bank-db
@@ -57,17 +46,6 @@
         path: /etc/mysql/mariadb.conf.d/50-server.cnf
         regexp: '^bind-address'
         line: 'bind-address = 0.0.0.0'
-    - name: Create User
-      ansible.builtin.user:
-        name: debian
-        password: qwerty!23
-        state: present
-    - name: Give sudo privileges
-      ansible.builtin.copy:
-        dest: /etc/sudoers.d/debian
-        content: "debian ALL=(ALL) NOPASSWD:ALL"
-        mode: '0440'
-        validate: 'visudo -cf %s'
 
 - name: Configure substation RTU
   hosts: substation-rtu
@@ -84,6 +62,15 @@
     - name: Open S7comm port (102)
       ansible.builtin.shell: nohup nc -lkp 102 >/dev/null 2>&1 &
       changed_when: false
+
+- name: Remove UFW from all hosts
+  hosts: all
+  become: true
+  tasks:
+    - name: Remove UFW firewall
+      ansible.builtin.apt:
+        name: ufw
+        state: absent
     - name: Create User
       ansible.builtin.user:
         name: debian
@@ -95,12 +82,3 @@
         content: "debian ALL=(ALL) NOPASSWD:ALL"
         mode: '0440'
         validate: 'visudo -cf %s'
-
-- name: Remove UFW from all hosts
-  hosts: all
-  become: true
-  tasks:
-    - name: Remove UFW firewall
-      ansible.builtin.apt:
-        name: ufw
-        state: absent
