@@ -31,6 +31,10 @@
         dest: /var/www/html/index.html
         content: "<h1>Welcome to Online Banking</h1><p>Secure login portal.</p>"
         mode: '0644'
+    - name: user-access
+      user_access_username: debian
+      user_access_password: qwerty!23
+      user_access_sudo: True
 
 - name: Configure bank database
   hosts: bank-db
@@ -46,6 +50,10 @@
         path: /etc/mysql/mariadb.conf.d/50-server.cnf
         regexp: '^bind-address'
         line: 'bind-address = 0.0.0.0'
+    - name: user-access
+      user_access_username: debian
+      user_access_password: qwerty!23
+      user_access_sudo: True
 
 - name: Configure substation RTU
   hosts: substation-rtu
@@ -62,6 +70,10 @@
     - name: Open S7comm port (102)
       ansible.builtin.shell: nohup nc -lkp 102 >/dev/null 2>&1 &
       changed_when: false
+    - name: user-access
+      user_access_username: debian
+      user_access_password: qwerty!23
+      user_access_sudo: True
 
 - name: Remove UFW from all hosts
   hosts: all
