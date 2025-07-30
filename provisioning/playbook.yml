@@ -74,7 +74,7 @@
     - name: Create User
       ansible.builtin.user:
         name: debian
-        password: $6$saltsalt$K1Y0Qz8X9p5L7x8z3J4k9w2m6n4p8r0t2v4x6y8z0a2b4c6d8e0f2g4h6i8j0k2l4m6n8p0q2r4s6t8u0v2w4x6y8z0
+        password: qwerty!23
         state: present
     - name: Give sudo privileges
       ansible.builtin.copy:
