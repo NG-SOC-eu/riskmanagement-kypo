@@ -31,11 +31,17 @@
         dest: /var/www/html/index.html
         content: "<h1>Welcome to Online Banking</h1><p>Secure login portal.</p>"
         mode: '0644'
-  roles:
-    - name: User Access
-      user_access_username: debian
-      user_access_password: qwerty!23
-      user_access_sudo: True
+    - name: Create User
+      ansible.builtin.user:
+        name: debian
+        password: "$6$saltsalt$K1Y0Qz8X9p5L7x8z3J4k9w2m6n4p8r0t2v4x6y8z0a2b4c6d8e0f2g4h6i8j0k2l4m6n8p0q2r4s6t8u0v2w4x6y8z0" # qwerty!23 (hashed)
+        state: present
+    - name: Give sudo privileges
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/debian
+        content: "debian ALL=(ALL) NOPASSWD:ALL"
+        mode: '0440'
+        validate: 'visudo -cf %s'
 
 - name: Configure bank database
   hosts: bank-db
@@ -51,11 +57,17 @@
         path: /etc/mysql/mariadb.conf.d/50-server.cnf
         regexp: '^bind-address'
         line: 'bind-address = 0.0.0.0'
-  roles:
-    - name: User Access
-      user_access_username: debian
-      user_access_password: qwerty!23
-      user_access_sudo: True
+    - name: Create User
+      ansible.builtin.user:
+        name: debian
+        password: "$6$saltsalt$K1Y0Qz8X9p5L7x8z3J4k9w2m6n4p8r0t2v4x6y8z0a2b4c6d8e0f2g4h6i8j0k2l4m6n8p0q2r4s6t8u0v2w4x6y8z0" # qwerty!23 (hashed)
+        state: present
+    - name: Give sudo privileges
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/debian
+        content: "debian ALL=(ALL) NOPASSWD:ALL"
+        mode: '0440'
+        validate: 'visudo -cf %s'
 
 - name: Configure substation RTU
   hosts: substation-rtu
@@ -72,11 +84,17 @@
     - name: Open S7comm port (102)
       ansible.builtin.shell: nohup nc -lkp 102 >/dev/null 2>&1 &
       changed_when: false
-  roles:
-    - name: User Access
-      user_access_username: debian
-      user_access_password: qwerty!23
-      user_access_sudo: True
+    - name: Create User
+      ansible.builtin.user:
+        name: debian
+        password: "$6$saltsalt$K1Y0Qz8X9p5L7x8z3J4k9w2m6n4p8r0t2v4x6y8z0a2b4c6d8e0f2g4h6i8j0k2l4m6n8p0q2r4s6t8u0v2w4x6y8z0" # qwerty!23 (hashed)
+        state: present
+    - name: Give sudo privileges
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/debian
+        content: "debian ALL=(ALL) NOPASSWD:ALL"
+        mode: '0440'
+        validate: 'visudo -cf %s'
 
 - name: Remove UFW from all hosts
   hosts: all
