@@ -82,3 +82,10 @@
         content: "debian ALL=(ALL) NOPASSWD:ALL"
         mode: '0440'
         validate: 'visudo -cf %s'
+
+- name: set up command logging
+  hosts: all
+  become: yes
+  roles:
+    - role: sandbox-logging
+      slf_destination_port: '{% if hostvars["man"] is defined -%} 514 {%- else -%} 515 {%- endif %}'
